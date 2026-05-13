@@ -23,6 +23,7 @@ class SvgJinjaContext:
 
     @property
     def needs(self) -> dict[str, Any]:
+        """Dict of all needs keyed by ID. Access fields like needs['REQ_001'].title."""
         return self._needs
 
     def ref(self, need_id: str) -> str:

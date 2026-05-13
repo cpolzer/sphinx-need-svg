@@ -1,0 +1,206 @@
+# sphinx-need-svg v{{ version }}
+
+A Sphinx-Needs extension for rendering SVG diagrams with clickable links to
+needs entities.  Write SVG markup with Jinja2 templating in your RST docs.
+
+## When to Use This Skill
+
+Trigger on:
+- "needsvg", "need svg", "svg diagram"
+- "visualise needs", "visualize needs"
+- "sphinx-needs diagram", "needs flow"
+- Working with `.rst` or `.md` files that contain `.. needsvg::` directives
+- Creating architecture diagrams that reference sphinx-needs objects
+
+## Installation
+
+```bash
+pip install sphinx-need-svg
+```
+
+Or with [uv](https://docs.astral.sh/uv/):
+
+```bash
+uv add sphinx-need-svg
+```
+
+Add to your `conf.py`:
+
+```python
+extensions = [
+    "sphinx_needs",
+    "sphinx_need_svg",
+]
+```
+
+## Directive: `.. needsvg::`
+
+Renders SVG markup with Jinja2 templating and sphinx-needs integration.
+The directive body is an SVG template processed through Jinja2 at build time.
+
+### Options
+
+{# Dynamic: option names come from code, descriptions are static here #}
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+{%- for name in option_names %}
+{%- if name == "width" %}
+| `:width:` | string | `100%` | SVG container width |
+{%- elif name == "height" %}
+| `:height:` | string | `auto` | SVG container height |
+{%- elif name == "align" %}
+| `:align:` | choice | `center` | Horizontal alignment: `left`, `center`, or `right` |
+{%- elif name == "debug" %}
+| `:debug:` | flag | off | Show raw RST/Jinja source as a code block above the rendered SVG |
+{%- elif name == "file" %}
+| `:file:` | path | -- | Load SVG/Jinja2 template from an external file (relative to source doc) |
+{%- else %}
+| `:{{ name }}:` | | | *New option -- add description to skill template* |
+{%- endif %}
+{%- endfor %}
+
+**Note:** If both `:file:` and inline content are provided, `:file:` wins.
+
+## Jinja Helpers
+
+Available inside `.. needsvg::` content:
+
+{% for helper in helpers -%}
+### `{{ helper.signature }}`
+
+{% if helper.is_property -%}
+*Property.* {{ helper.docstring }}
+{%- else -%}
+{{ helper.docstring }}
+{%- endif %}
+
+{% endfor -%}
+
+### Usage Examples
+
+{% raw -%}
+```jinja
+{# Access a need by ID #}
+{{ needs['REQ_001'].title }}
+
+{# Link to a need #}
+<a href="{{ ref('REQ_001') }}">Click me</a>
+
+{# Loop over filtered needs #}
+{% for need in filter("type == 'req'") %}
+  <text>{{ need.title }}</text>
+{% endfor %}
+
+{# Pre-styled card #}
+{{ flow('REQ_001') }}
+```
+{%- endraw %}
+
+## Configuration
+
+{% if needs_types -%}
+### needs_types
+
+| Directive | Title | Prefix | Color |
+|-----------|-------|--------|-------|
+{% for t in needs_types -%}
+| `{{ t.directive }}` | {{ t.title }} | `{{ t.prefix }}` | `{{ t.color }}` |
+{% endfor %}
+The `arch` type wraps SVG layers for drill-down navigation (see Patterns).
+{%- endif %}
+
+{% if needs_links -%}
+### needs_links
+
+| Link Type | Outgoing | Incoming |
+|-----------|----------|----------|
+{% for name, link in needs_links.items() -%}
+| `{{ name }}` | {{ link.outgoing }} | {{ link.incoming }} |
+{% endfor %}
+{%- endif %}
+
+## Patterns
+
+### Architecture Drilldown with `arch` Wrappers
+
+Wrap each SVG layer in an `.. arch::` need element.  Boxes in a parent SVG
+link to the child `arch` ID via `ref()`.
+
+```rst
+.. arch:: Pipeline Overview
+   :id: ARCH_PIPELINE
+
+   .. needsvg::
+
+      <svg width="600" height="100" xmlns="http://www.w3.org/2000/svg">
+{% raw %}
+        <a href="{{ ref('ARCH_BUILD') }}">
+          <rect .../>
+          <text>{{ needs['STAGE_BUILD'].title }}</text>
+        </a>
+{% endraw %}
+      </svg>
+
+.. arch:: Build Stage Detail
+   :id: ARCH_BUILD
+   :implements: ARCH_PIPELINE
+
+   .. needsvg::
+
+      <svg width="500" height="120" xmlns="http://www.w3.org/2000/svg">
+{% raw %}
+        <!-- Back-link -->
+        <a href="{{ ref('ARCH_PIPELINE') }}">
+          <text x="8" y="14">◀ Pipeline</text>
+        </a>
+{% endraw %}
+        ...
+      </svg>
+```
+
+**Key elements:**
+- **Drill-down:** Box links to child `arch` via `ref('ARCH_CHILD')`
+- **Back-link:** Child SVG links to parent via `ref('ARCH_PARENT')`
+- **Breadcrumb:** Static SVG text showing hierarchy path
+- **Sibling nav:** Links to peer `arch` elements at the same level
+- **Traceability:** `:implements:` on `arch` elements creates traceable hierarchy
+
+### Traceability Chain
+
+Link needs across types and render as a flow:
+
+{% raw -%}
+```jinja
+{% set chain = ["REQ_ENC", "SPEC_DBENC", "IMPL_TDE", "TC_ENC"] %}
+{% for id in chain %}
+  <a href="{{ ref(id) }}">
+    <rect x="{{ loop.index0 * 170 }}" .../>
+    <text>{{ needs[id].title }}</text>
+  </a>
+{% endfor %}
+```
+{%- endraw %}
+
+### Dynamic Dashboard
+
+Render all needs of a type automatically:
+
+{% raw -%}
+```jinja
+{% for need in filter("type == 'req'") %}
+  <a href="{{ ref(need.id) }}">
+    <rect x="5" y="{{ loop.index0 * 55 }}" .../>
+    <text>{{ need.title }}</text>
+  </a>
+{% endfor %}
+```
+{%- endraw %}
+
+## Common Mistakes
+
+1. **Missing SVG namespace** -- Always include `xmlns="http://www.w3.org/2000/svg"`
+2. **`:file:` + inline content** -- If both given, `:file:` wins with a warning
+3. **Missing `sphinx_needs` extension** -- Context helpers return empty data without it
+4. **Unescaped characters in SVG** -- Use `&amp;`, `&lt;`, `&gt;` in `<text>`
+5. **Relative `:file:` paths** -- Relative to the source document, not project root
+6. **SVG `id` collisions** -- Use unique IDs for `<defs>` markers across blocks
