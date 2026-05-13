@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any, ClassVar, Sequence
 
 from docutils import nodes
+from sphinx_needs_svg.jinja_context import render_jinja_svg
 from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxDirective
@@ -63,7 +64,7 @@ def process_needsvg(app: Sphinx, doctree: nodes.document, docname: str) -> None:
             node.replace_self([])
             continue
 
-        svg_content = data["content"]
+        svg_content = render_jinja_svg(data["content"], app)
         options = data["options"]
 
         align = options.get("align", "center")
