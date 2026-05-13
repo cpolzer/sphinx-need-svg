@@ -15,7 +15,9 @@ class SvgJinjaContext:
     def _load_needs(self) -> dict[str, Any]:
         try:
             from sphinx_needs.data import SphinxNeedsData
-            return {k: v for k, v in SphinxNeedsData(self._app.env).get_needs_view().items()}
+
+            view = SphinxNeedsData(self._app.env).get_needs_view()
+            return dict(view.items())
         except Exception:
             return {}
 
@@ -35,8 +37,8 @@ class SvgJinjaContext:
         """Return needs matching a filter expression."""
         try:
             from sphinx_needs.config import NeedsSphinxConfig
-            from sphinx_needs.filter_common import filter_needs_view
             from sphinx_needs.data import SphinxNeedsData
+            from sphinx_needs.filter_common import filter_needs_view
 
             needs_view = SphinxNeedsData(self._app.env).get_needs_view()
             needs_config = NeedsSphinxConfig(self._app.config)
@@ -53,12 +55,15 @@ class SvgJinjaContext:
         link = self.ref(need_id)
         return (
             f'<a href="{link}">'
-            f'<g>'
-            f'<rect width="120" height="40" rx="4" fill="#ddeeff" stroke="#336699"/>'
-            f'<text x="60" y="16" text-anchor="middle" font-size="10" fill="#666">{need_id}</text>'
-            f'<text x="60" y="30" text-anchor="middle" font-size="11">{title}</text>'
-            f'</g>'
-            f'</a>'
+            f"<g>"
+            f'<rect width="120" height="40" rx="4"'
+            f' fill="#ddeeff" stroke="#336699"/>'
+            f'<text x="60" y="16" text-anchor="middle"'
+            f' font-size="10" fill="#666">{need_id}</text>'
+            f'<text x="60" y="30" text-anchor="middle"'
+            f' font-size="11">{title}</text>'
+            f"</g>"
+            f"</a>"
         )
 
     def get_context(self) -> dict[str, Any]:

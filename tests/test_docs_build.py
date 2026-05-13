@@ -1,4 +1,5 @@
 """End-to-end dogfood test: build the project's own docs and verify SVG output."""
+
 from __future__ import annotations
 
 import subprocess
@@ -15,9 +16,10 @@ BUILD_DIR = DOCS_DIR / "_build" / "html"
 def docs_build():
     """Build the docs once per test module."""
     result = subprocess.run(
-        [sys.executable, "-m", "sphinx", "-b", "html",
-         str(DOCS_DIR), str(BUILD_DIR)],
-        capture_output=True, text=True, timeout=120,
+        [sys.executable, "-m", "sphinx", "-b", "html", str(DOCS_DIR), str(BUILD_DIR)],
+        capture_output=True,
+        text=True,
+        timeout=120,
     )
     return result
 
@@ -80,8 +82,14 @@ class TestArchitecturePage:
 
     def test_component_links(self, docs_build):
         content = _read_page("architecture")
-        for comp in ("ARCH_SETUP", "ARCH_DIRECTIVE", "ARCH_NODE",
-                      "ARCH_PROCESSOR", "ARCH_RENDER", "ARCH_JINJA"):
+        for comp in (
+            "ARCH_SETUP",
+            "ARCH_DIRECTIVE",
+            "ARCH_NODE",
+            "ARCH_PROCESSOR",
+            "ARCH_RENDER",
+            "ARCH_JINJA",
+        ):
             assert comp in content
 
     def test_clickable_refs(self, docs_build):

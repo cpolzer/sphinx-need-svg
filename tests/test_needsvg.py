@@ -49,4 +49,8 @@ def test_needsvg_bad_need_ref_warns(app, status, warning):
     app.build()
     content = (Path(app.outdir) / "index.html").read_text()
     # Should not crash the build. Should produce some output.
-    assert "<svg" in content or "error" in content.lower() or "needsvg" in warning.getvalue().lower()
+    assert (
+        "<svg" in content
+        or "error" in content.lower()
+        or "needsvg" in warning.getvalue().lower()
+    )

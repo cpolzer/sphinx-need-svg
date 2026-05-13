@@ -1,0 +1,61 @@
+[tools]
+python = "3.12"
+
+[env]
+_.python.venv = { path = ".venv", create = true }
+
+[tasks.install]
+description = "Install package with all extras in editable mode"
+run = "uv pip install -e '.[test,docs]'"
+
+[tasks.test]
+description = "Run full test suite"
+run = "uv run pytest tests/ -v"
+
+[tasks.test-unit]
+description = "Run unit/integration tests only"
+run = "uv run pytest tests/test_needsvg.py -v"
+
+[tasks.test-e2e]
+description = "Run e2e docs build test"
+run = "uv run pytest tests/test_docs_build.py -v"
+
+[tasks.docs]
+description = "Build HTML documentation"
+run = "uv run sphinx-build -b html docs docs/_build/html"
+
+[tasks.docs-clean]
+description = "Clean and rebuild documentation"
+run = ["rm -rf docs/_build", "uv run sphinx-build -b html docs docs/_build/html"]
+
+[tasks.build]
+description = "Build sdist and wheel"
+run = "uv build"
+
+[tasks.lint]
+description = "Run ruff linter"
+run = "uv run ruff check src/ tests/"
+
+[tasks.lint-fix]
+description = "Run ruff linter with auto-fix"
+run = "uv run ruff check --fix src/ tests/"
+
+[tasks.format]
+description = "Format code with ruff"
+run = "uv run ruff format src/ tests/"
+
+[tasks.format-check]
+description = "Check code formatting without modifying"
+run = "uv run ruff format --check src/ tests/"
+
+[tasks.typecheck]
+description = "Run mypy type checker"
+run = "uv run mypy"
+
+[tasks.check]
+description = "Run all checks (lint + typecheck + test)"
+run = ["uv run ruff check src/ tests/", "uv run ruff format --check src/ tests/", "uv run mypy", "uv run pytest tests/ -v"]
+
+[tasks.clean]
+description = "Remove build artifacts"
+run = "rm -rf dist/ build/ docs/_build/ src/*.egg-info .pytest_cache"

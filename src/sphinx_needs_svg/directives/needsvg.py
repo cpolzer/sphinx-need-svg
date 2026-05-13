@@ -1,19 +1,22 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, ClassVar, Sequence
+from collections.abc import Sequence
+from typing import Any, ClassVar
 
 from docutils import nodes
-from sphinx_needs_svg.jinja_context import render_jinja_svg
 from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxDirective
 
+from sphinx_needs_svg.jinja_context import render_jinja_svg
+
 logger = logging.getLogger(__name__)
 
 
-class Needsvg(nodes.General, nodes.Element):
+class Needsvg(nodes.General, nodes.Element):  # type: ignore[misc]
     """Placeholder node replaced during doctree-resolved."""
+
     pass
 
 

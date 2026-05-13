@@ -4,7 +4,11 @@ from typing import Any
 
 from sphinx.application import Sphinx
 
-from sphinx_needs_svg.directives.needsvg import Needsvg, NeedsvgDirective, process_needsvg
+from sphinx_needs_svg.directives.needsvg import (
+    Needsvg,
+    NeedsvgDirective,
+    process_needsvg,
+)
 
 
 def setup(app: Sphinx) -> dict[str, Any]:
