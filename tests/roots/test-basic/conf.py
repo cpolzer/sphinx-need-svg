@@ -1,4 +1,4 @@
-extensions = ["sphinx_needs", "sphinx_needs_svg"]
+extensions = ["sphinx_needs", "sphinx_need_svg"]
 needs_types = [
     {
         "directive": "req",

@@ -13,7 +13,7 @@ Development Setup
 .. code-block:: bash
 
    git clone <repo-url>
-   cd sphinx-needs-svg
+   cd sphinx-need-svg
    mise install          # installs Python 3.12
    uv sync --all-extras  # creates .venv, installs all deps
 
@@ -104,13 +104,13 @@ Project Structure
 
 .. code-block:: text
 
-   sphinx-needs-svg/
+   sphinx-need-svg/
    ├── .mise.toml               # mise tasks and Python version
    ├── pyproject.toml            # package metadata, deps, tool config
    ├── uv.lock                   # reproducible dependency lock
    ├── LICENSE                   # MIT license
    ├── README.md
-   ├── src/sphinx_needs_svg/     # extension source
+   ├── src/sphinx_need_svg/     # extension source
    │   ├── __init__.py           # Sphinx setup()
    │   ├── directives/
    │   │   └── needsvg.py        # directive, node, processor

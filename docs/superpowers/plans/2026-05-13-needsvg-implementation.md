@@ -1,4 +1,4 @@
-# sphinx-needs-svg Implementation Plan
+# sphinx-need-svg Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -17,10 +17,10 @@
 | File | Responsibility |
 |---|---|
 | `pyproject.toml` | Package metadata, dependencies, entry points |
-| `src/sphinx_needs_svg/__init__.py` | `setup()` function -- registers node, directive, event handler |
-| `src/sphinx_needs_svg/directives/__init__.py` | Package marker |
-| `src/sphinx_needs_svg/directives/needsvg.py` | `Needsvg` node, `NeedsvgDirective`, `process_needsvg()` |
-| `src/sphinx_needs_svg/jinja_context.py` | `SvgJinjaContext` -- `ref()`, `filter()`, `flow()` helpers |
+| `src/sphinx_need_svg/__init__.py` | `setup()` function -- registers node, directive, event handler |
+| `src/sphinx_need_svg/directives/__init__.py` | Package marker |
+| `src/sphinx_need_svg/directives/needsvg.py` | `Needsvg` node, `NeedsvgDirective`, `process_needsvg()` |
+| `src/sphinx_need_svg/jinja_context.py` | `SvgJinjaContext` -- `ref()`, `filter()`, `flow()` helpers |
 | `tests/conftest.py` | Shared fixtures (Sphinx app builder with sphinx-needs + our extension) |
 | `tests/test_needsvg.py` | Directive integration tests |
 
@@ -30,8 +30,8 @@
 
 **Files:**
 - Create: `pyproject.toml`
-- Create: `src/sphinx_needs_svg/__init__.py`
-- Create: `src/sphinx_needs_svg/directives/__init__.py`
+- Create: `src/sphinx_need_svg/__init__.py`
+- Create: `src/sphinx_need_svg/directives/__init__.py`
 
 - [ ] **Step 1: Create pyproject.toml**
 
@@ -41,7 +41,7 @@ requires = ["setuptools>=68.0", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "sphinx-needs-svg"
+name = "sphinx-need-svg"
 version = "0.1.0"
 description = "Sphinx-Needs extension for SVG diagrams with clickable need links"
 requires-python = ">=3.9"
@@ -59,9 +59,9 @@ where = ["src"]
 
 - [ ] **Step 2: Create empty `__init__.py` for directives package**
 
-`src/sphinx_needs_svg/directives/__init__.py` -- empty file.
+`src/sphinx_need_svg/directives/__init__.py` -- empty file.
 
-- [ ] **Step 3: Create `src/sphinx_needs_svg/__init__.py` with setup stub**
+- [ ] **Step 3: Create `src/sphinx_need_svg/__init__.py` with setup stub**
 
 ```python
 from __future__ import annotations
@@ -80,14 +80,14 @@ def setup(app: Any) -> dict[str, Any]:
 
 - [ ] **Step 4: Verify the package is importable**
 
-Run: `pip install -e ".[test]"` then `python -c "import sphinx_needs_svg; print('ok')"`
+Run: `pip install -e ".[test]"` then `python -c "import sphinx_need_svg; print('ok')"`
 Expected: `ok`
 
 - [ ] **Step 5: Commit**
 
 ```bash
 git add pyproject.toml src/
-git commit -m "feat: scaffold sphinx-needs-svg package"
+git commit -m "feat: scaffold sphinx-need-svg package"
 ```
 
 ---
@@ -95,8 +95,8 @@ git commit -m "feat: scaffold sphinx-needs-svg package"
 ### Task 2: Needsvg Node and Directive (Placeholder Only)
 
 **Files:**
-- Create: `src/sphinx_needs_svg/directives/needsvg.py`
-- Modify: `src/sphinx_needs_svg/__init__.py`
+- Create: `src/sphinx_need_svg/directives/needsvg.py`
+- Modify: `src/sphinx_need_svg/__init__.py`
 - Create: `tests/conftest.py`
 - Create: `tests/test_needsvg.py`
 
@@ -118,7 +118,7 @@ def rootdir():
 
 Create `tests/roots/test-basic/conf.py`:
 ```python
-extensions = ["sphinx_needs", "sphinx_needs_svg"]
+extensions = ["sphinx_needs", "sphinx_need_svg"]
 needs_types = [
     {"directive": "req", "title": "Requirement", "prefix": "REQ_", "color": "#BFD8D2", "style": "node"},
 ]
@@ -161,7 +161,7 @@ Expected: FAIL -- `needsvg` directive not registered.
 
 - [ ] **Step 3: Implement Needsvg node, NeedsvgDirective, and process_needsvg**
 
-`src/sphinx_needs_svg/directives/needsvg.py`:
+`src/sphinx_need_svg/directives/needsvg.py`:
 ```python
 from __future__ import annotations
 
@@ -248,7 +248,7 @@ def process_needsvg(app: Sphinx, doctree: nodes.document, docname: str) -> None:
         node.replace_self(content_nodes)
 ```
 
-Update `src/sphinx_needs_svg/__init__.py`:
+Update `src/sphinx_need_svg/__init__.py`:
 ```python
 from __future__ import annotations
 
@@ -256,7 +256,7 @@ from typing import Any
 
 from sphinx.application import Sphinx
 
-from sphinx_needs_svg.directives.needsvg import Needsvg, NeedsvgDirective, process_needsvg
+from sphinx_need_svg.directives.needsvg import Needsvg, NeedsvgDirective, process_needsvg
 
 
 def setup(app: Sphinx) -> dict[str, Any]:
@@ -288,8 +288,8 @@ git commit -m "feat: add Needsvg node, directive, and process handler"
 ### Task 3: Jinja Context with Needs Helpers
 
 **Files:**
-- Create: `src/sphinx_needs_svg/jinja_context.py`
-- Modify: `src/sphinx_needs_svg/directives/needsvg.py`
+- Create: `src/sphinx_need_svg/jinja_context.py`
+- Modify: `src/sphinx_need_svg/directives/needsvg.py`
 - Modify: `tests/test_needsvg.py`
 
 - [ ] **Step 1: Write the failing test**
@@ -323,7 +323,7 @@ Expected: FAIL -- Jinja not processed, raw `{{ }}` in output or template error.
 
 - [ ] **Step 3: Implement SvgJinjaContext and wire into process_needsvg**
 
-`src/sphinx_needs_svg/jinja_context.py`:
+`src/sphinx_need_svg/jinja_context.py`:
 ```python
 from __future__ import annotations
 
@@ -409,7 +409,7 @@ Update `process_needsvg` in `needsvg.py` to call `render_jinja_svg`:
 
 In the `process_needsvg` function, replace `svg_content = data["content"]` with:
 ```python
-from sphinx_needs_svg.jinja_context import render_jinja_svg
+from sphinx_need_svg.jinja_context import render_jinja_svg
 svg_content = render_jinja_svg(data["content"], app)
 ```
 
@@ -569,15 +569,15 @@ git commit -m "test: add flow helper integration test"
 ### Task 7: Error Handling
 
 **Files:**
-- Modify: `src/sphinx_needs_svg/jinja_context.py`
-- Modify: `src/sphinx_needs_svg/directives/needsvg.py`
+- Modify: `src/sphinx_need_svg/jinja_context.py`
+- Modify: `src/sphinx_need_svg/directives/needsvg.py`
 - Modify: `tests/test_needsvg.py`
 
 - [ ] **Step 1: Write the failing test**
 
 Create `tests/roots/test-errors/conf.py`:
 ```python
-extensions = ["sphinx_needs", "sphinx_needs_svg"]
+extensions = ["sphinx_needs", "sphinx_need_svg"]
 ```
 
 Create `tests/roots/test-errors/index.rst`:
@@ -644,7 +644,7 @@ Expected: ALL PASS
 
 - [ ] **Step 2: Verify package installs cleanly**
 
-Run: `pip install -e ".[test]" && python -c "from sphinx_needs_svg import setup; print(setup)"`
+Run: `pip install -e ".[test]" && python -c "from sphinx_need_svg import setup; print(setup)"`
 Expected: prints function reference
 
 - [ ] **Step 3: Commit any final cleanup**

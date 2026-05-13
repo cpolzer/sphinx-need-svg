@@ -1,4 +1,4 @@
-# Design: sphinx-needs-svg (needsvg directive)
+# Design: sphinx-need-svg (needsvg directive)
 
 **Date:** 2026-05-13
 **Status:** Approved
@@ -47,10 +47,10 @@ Users write SVG markup in the directive body with Jinja2 templating for dynamic 
 ### Package Structure
 
 ```
-sphinx-needs-svg/
+sphinx-need-svg/
 ├── pyproject.toml
 ├── src/
-│   └── sphinx_needs_svg/
+│   └── sphinx_need_svg/
 │       ├── __init__.py          # setup() entry point
 │       ├── directives/
 │       │   └── needsvg.py       # Needsvg node, NeedsvgDirective, process_needsvg

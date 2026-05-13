@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "sphinx-needs-svg"
+name = "sphinx-need-svg"
 version = "0.2.0"
 description = "Sphinx-Needs extension for SVG diagrams with clickable need links"
 requires-python = ">=3.9"
@@ -15,17 +15,17 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-test = ["pytest", "pytest-regressions"]
+test = ["pytest", "pytest-regressions", "sphinx-need-svg[docs]"]
 docs = ["sphinx", "sphinx-needs", "furo", "myst-parser"]
 dev = [
-    "sphinx-needs-svg[test,docs]",
+    "sphinx-need-svg[test,docs]",
     "ruff",
     "mypy",
     "commitizen",
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/sphinx_needs_svg"]
+packages = ["src/sphinx_need_svg"]
 
 [tool.ruff]
 target-version = "py39"
@@ -36,7 +36,7 @@ select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
 
 [tool.mypy]
 python_version = "3.12"
-packages = ["sphinx_needs_svg"]
+packages = ["sphinx_need_svg"]
 mypy_path = "src"
 strict = true
 warn_return_any = true
@@ -58,7 +58,7 @@ name = "cz_conventional_commits"
 version = "0.2.0"
 version_files = [
     "pyproject.toml:^version",
-    "src/sphinx_needs_svg/__init__.py:version",
+    "src/sphinx_need_svg/__init__.py:version",
 ]
 tag_format = "v$version"
 update_changelog_on_bump = true

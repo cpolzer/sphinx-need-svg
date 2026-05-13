@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 from collections.abc import Sequence
+from pathlib import Path
 from typing import Any, ClassVar
 
 from docutils import nodes
@@ -9,7 +10,7 @@ from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxDirective
 
-from sphinx_needs_svg.jinja_context import render_jinja_svg
+from sphinx_need_svg.jinja_context import render_jinja_svg
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +30,7 @@ class NeedsvgDirective(SphinxDirective):
         "height": directives.unchanged,
         "align": lambda x: directives.choice(x, ("left", "center", "right")),
         "debug": directives.flag,
+        "file": directives.unchanged,
     }
 
     def run(self) -> Sequence[nodes.Node]:
@@ -39,10 +41,39 @@ class NeedsvgDirective(SphinxDirective):
         if not hasattr(env, "needsvg_all_data"):
             env.needsvg_all_data = {}
 
+        # Resolve content: inline body or :file: option (not both)
+        file_option = self.options.get("file")
+        if file_option and self.content:
+            logger.warning(
+                "needsvg: both :file: and inline content given at "
+                f"{env.docname}:{self.lineno}; using :file:"
+            )
+
+        if file_option:
+            # Resolve relative to the source file's directory
+            src_dir = Path(env.doc2path(env.docname)).parent
+            file_path = (src_dir / file_option).resolve()
+            try:
+                content = file_path.read_text(encoding="utf-8")
+            except FileNotFoundError:
+                logger.warning(
+                    f"needsvg: file not found: {file_path} "
+                    f"(at {env.docname}:{self.lineno})"
+                )
+                content = (
+                    '<svg><text fill="red">'
+                    f"needsvg error: file not found: {file_option}"
+                    "</text></svg>"
+                )
+            # Register dependency so Sphinx rebuilds when the file changes
+            env.note_dependency(str(file_path))
+        else:
+            content = "\n".join(self.content)
+
         env.needsvg_all_data[targetid] = {
             "docname": env.docname,
             "lineno": self.lineno,
-            "content": "\n".join(self.content),
+            "content": content,
             "options": {
                 "width": self.options.get("width", "100%"),
                 "height": self.options.get("height", "auto"),

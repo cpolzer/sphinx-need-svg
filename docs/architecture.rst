@@ -1,13 +1,13 @@
 Architecture
 ============
 
-This page documents the internal architecture of sphinx-needs-svg. It uses
+This page documents the internal architecture of sphinx-need-svg. It uses
 ``needsvg`` itself to visualise the components -- eating our own dog food.
 
 Overview
 --------
 
-sphinx-needs-svg follows the same **two-phase rendering** pattern used by
+sphinx-need-svg follows the same **two-phase rendering** pattern used by
 sphinx-needs' own ``needuml`` directive:
 
 1. **Parse phase** -- the directive runs at RST parse time, stores its content
@@ -187,7 +187,7 @@ File Map
 
 .. code-block:: text
 
-   src/sphinx_needs_svg/
+   src/sphinx_need_svg/
    ├── __init__.py              # setup() entry point
    ├── directives/
    │   ├── __init__.py

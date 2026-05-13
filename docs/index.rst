@@ -1,4 +1,4 @@
-sphinx-needs-svg
+sphinx-need-svg
 =================
 
 A Sphinx-Needs extension for rendering SVG diagrams with clickable links to

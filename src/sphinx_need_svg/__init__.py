@@ -4,7 +4,7 @@ from typing import Any
 
 from sphinx.application import Sphinx
 
-from sphinx_needs_svg.directives.needsvg import (
+from sphinx_need_svg.directives.needsvg import (
     Needsvg,
     NeedsvgDirective,
     process_needsvg,

@@ -18,6 +18,14 @@ Renders SVG markup with Jinja2 templating and sphinx-needs integration.
         ...Jinja2-templated SVG content...
       </svg>
 
+Or load the SVG template from an external file:
+
+.. code-block:: rst
+
+   .. needsvg::
+      :file: _svgs/pipeline.svg.j2
+      :debug:
+
 Options
 ~~~~~~~
 
@@ -29,6 +37,12 @@ Options
      - Type
      - Default
      - Description
+   * - ``:file:``
+     - path
+     -
+     - Path to an SVG/Jinja2 template file, relative to the current document.
+       When set, the file content is used instead of the directive body.
+       Sphinx tracks the file as a dependency and rebuilds when it changes.
    * - ``:width:``
      - string
      - ``100%``

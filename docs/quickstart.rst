@@ -6,13 +6,13 @@ Installation
 
 .. code-block:: bash
 
-   pip install sphinx-needs-svg
+   pip install sphinx-need-svg
 
 Or with `uv <https://docs.astral.sh/uv/>`_:
 
 .. code-block:: bash
 
-   uv add sphinx-needs-svg
+   uv add sphinx-need-svg
 
 Add to your ``conf.py``:
 
@@ -20,7 +20,7 @@ Add to your ``conf.py``:
 
    extensions = [
        "sphinx_needs",
-       "sphinx_needs_svg",
+       "sphinx_need_svg",
    ]
 
 Your First Diagram

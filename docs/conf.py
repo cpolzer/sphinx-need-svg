@@ -1,10 +1,10 @@
-project = "sphinx-needs-svg"
-copyright = "2026, sphinx-needs-svg contributors"
-author = "sphinx-needs-svg contributors"
+project = "sphinx-need-svg"
+copyright = "2026, sphinx-need-svg contributors"
+author = "sphinx-need-svg contributors"
 
 extensions = [
     "sphinx_needs",
-    "sphinx_needs_svg",
+    "sphinx_need_svg",
     "myst_parser",
 ]
 
@@ -14,13 +14,14 @@ needs_types = [
     {"directive": "spec", "title": "Specification", "prefix": "SPEC_", "color": "#DCB5FF", "style": "node"},
     {"directive": "impl", "title": "Implementation", "prefix": "IMPL_", "color": "#FEDCD2", "style": "node"},
     {"directive": "test", "title": "Test Case", "prefix": "TC_", "color": "#B9F6CA", "style": "node"},
+    {"directive": "arch", "title": "Architecture View", "prefix": "ARCH_", "color": "#E3F2FD", "style": "node"},
 ]
 
-needs_extra_links = [
-    {"option": "implements", "incoming": "is implemented by", "outgoing": "implements"},
-    {"option": "tests", "incoming": "is tested by", "outgoing": "tests"},
-    {"option": "traces", "incoming": "is traced by", "outgoing": "traces"},
-]
+needs_links = {
+    "implements": {"incoming": "is implemented by", "outgoing": "implements"},
+    "tests": {"incoming": "is tested by", "outgoing": "tests"},
+    "traces": {"incoming": "is traced by", "outgoing": "traces"},
+}
 
 # -- HTML output --
 html_theme = "furo"

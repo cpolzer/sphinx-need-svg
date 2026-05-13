@@ -54,3 +54,19 @@ def test_needsvg_bad_need_ref_warns(app, status, warning):
         or "error" in content.lower()
         or "needsvg" in warning.getvalue().lower()
     )
+
+
+@pytest.mark.sphinx("html", testroot="file")
+def test_needsvg_file_option(app, status, warning):
+    app.build()
+    content = (Path(app.outdir) / "index.html").read_text()
+    assert "File-loaded Requirement" in content
+    assert 'href="' in content
+    assert "ddeeff" in content
+
+
+@pytest.mark.sphinx("html", testroot="file")
+def test_needsvg_file_not_found(app, status, warning):
+    app.build()
+    content = (Path(app.outdir) / "index.html").read_text()
+    assert "file not found" in content.lower() or "nonexistent" in content

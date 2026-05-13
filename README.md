@@ -1,4 +1,4 @@
-# sphinx-needs-svg
+# sphinx-need-svg
 
 A [Sphinx-Needs](https://sphinx-needs.readthedocs.io/) extension for rendering
 SVG diagrams with clickable links to needs entities.
@@ -8,13 +8,13 @@ Write SVG markup with Jinja2 templating directly in your RST documentation.
 ## Quick Start
 
 ```bash
-pip install sphinx-needs-svg
+pip install sphinx-need-svg
 ```
 
 Add to `conf.py`:
 
 ```python
-extensions = ["sphinx_needs", "sphinx_needs_svg"]
+extensions = ["sphinx_needs", "sphinx_need_svg"]
 ```
 
 Use in RST:

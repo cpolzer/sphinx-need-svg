@@ -1,6 +1,11 @@
 Examples
 ========
 
+.. toctree::
+   :maxdepth: 2
+
+   examples-drilldown
+
 This page demonstrates ``needsvg`` with real sphinx-needs entities defined
 right here -- eating our own dog food.
 
