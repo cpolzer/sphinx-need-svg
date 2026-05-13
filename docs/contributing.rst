@@ -110,6 +110,10 @@ Project Structure
    ├── uv.lock                   # reproducible dependency lock
    ├── LICENSE                   # MIT license
    ├── README.md
+   ├── SKILL.md                  # generated AI agent skill (do not edit)
+   ├── scripts/
+   │   ├── generate_skill.py     # AST-based SKILL.md generator
+   │   └── skill_template.md.j2  # Jinja2 template for SKILL.md
    ├── src/sphinx_need_svg/     # extension source
    │   ├── __init__.py           # Sphinx setup()
    │   ├── directives/
@@ -151,6 +155,36 @@ on every page exercises the extension. The e2e test
 (``test_docs_build.py``) builds the docs and checks for SVG content
 in the output.
 
+AI Agent Skill (``SKILL.md``)
+-----------------------------
+
+The repository includes a generated ``SKILL.md`` at the project root.
+This file teaches AI coding agents (Claude Code, OpenCode, Copilot, etc.)
+how to use ``sphinx-need-svg`` — directive options, Jinja helpers,
+configuration, and common patterns like drilldown navigation.
+
+**Regenerating the skill file:**
+
+.. code-block:: bash
+
+   uv run python scripts/generate_skill.py
+
+The generator uses AST-based extraction to pull directive options, Jinja
+helpers, ``needs_types``, and ``needs_links`` from the source code and
+``docs/conf.py``.  Static prose (patterns, common mistakes) lives in the
+Jinja2 template at ``scripts/skill_template.md.j2``.
+
+The output is deterministic — running the generator twice produces the
+same ``SKILL.md``.  CI automatically regenerates and commits the file on
+pushes to ``main`` (the ``update-skill`` job in ``.github/workflows/ci.yml``).
+
+When to regenerate manually:
+
+- After adding or renaming directive options in ``needsvg.py``
+- After adding or changing Jinja helpers in ``jinja_context.py``
+- After modifying ``needs_types`` or ``needs_links`` in ``docs/conf.py``
+- After updating the template prose in ``scripts/skill_template.md.j2``
+
 Adding Features
 ---------------
 
@@ -158,7 +192,8 @@ Adding Features
 2. Implement the feature
 3. Add an example to ``docs/examples.rst`` that exercises it
 4. Run ``mise run check`` to verify everything passes
-5. Submit a PR
+5. Regenerate ``SKILL.md`` if the change affects the public API (see above)
+6. Submit a PR
 
 Reporting Issues
 ----------------

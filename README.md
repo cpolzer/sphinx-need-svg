@@ -39,3 +39,10 @@ mise run docs    # build documentation
 ```
 
 See the [documentation](docs/) for full details.
+
+## AI Agent Skill
+
+The repository includes a generated [`SKILL.md`](SKILL.md) that teaches AI
+coding agents how to use this extension — directive options, Jinja helpers,
+configuration, and patterns like drilldown navigation.  CI keeps it up to date
+automatically.
