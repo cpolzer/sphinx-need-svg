@@ -5,6 +5,7 @@ author = "sphinx-needs-svg contributors"
 extensions = [
     "sphinx_needs",
     "sphinx_needs_svg",
+    "myst_parser",
 ]
 
 # -- Sphinx-Needs configuration --

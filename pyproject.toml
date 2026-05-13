@@ -16,11 +16,12 @@ dependencies = [
 
 [project.optional-dependencies]
 test = ["pytest", "pytest-regressions"]
-docs = ["sphinx", "sphinx-needs", "furo"]
+docs = ["sphinx", "sphinx-needs", "furo", "myst-parser"]
 dev = [
     "sphinx-needs-svg[test,docs]",
     "ruff",
     "mypy",
+    "commitizen",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -51,3 +52,14 @@ ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.1.0"
+version_files = [
+    "pyproject.toml:^version",
+    "src/sphinx_needs_svg/__init__.py:version",
+]
+tag_format = "v$version"
+update_changelog_on_bump = true
+changelog_file = "CHANGELOG.md"

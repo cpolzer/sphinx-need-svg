@@ -59,3 +59,11 @@ run = ["uv run ruff check src/ tests/", "uv run ruff format --check src/ tests/"
 [tasks.clean]
 description = "Remove build artifacts"
 run = "rm -rf dist/ build/ docs/_build/ src/*.egg-info .pytest_cache"
+
+[tasks.bump]
+description = "Bump version with commitizen (dry-run)"
+run = "uv run cz bump --dry-run"
+
+[tasks.bump-apply]
+description = "Bump version, update changelog, create tag"
+run = "uv run cz bump --yes --changelog"

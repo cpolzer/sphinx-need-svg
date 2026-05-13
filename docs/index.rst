@@ -32,3 +32,4 @@ sphinx-needs data at build time.
    examples
    architecture
    contributing
+   changelog
