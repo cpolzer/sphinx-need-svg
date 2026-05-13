@@ -8,6 +8,12 @@ Installation
 
    pip install sphinx-needs-svg
 
+Or with `uv <https://docs.astral.sh/uv/>`_:
+
+.. code-block:: bash
+
+   uv add sphinx-needs-svg
+
 Add to your ``conf.py``:
 
 .. code-block:: python

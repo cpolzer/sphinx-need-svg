@@ -1,6 +1,12 @@
 Contributing
 ============
 
+Prerequisites
+-------------
+
+- `mise <https://mise.jdx.dev/>`_ -- manages Python version and task runner
+- `uv <https://docs.astral.sh/uv/>`_ -- fast Python package manager
+
 Development Setup
 -----------------
 
@@ -8,27 +14,90 @@ Development Setup
 
    git clone <repo-url>
    cd sphinx-needs-svg
-   python -m venv .venv
-   source .venv/bin/activate
-   pip install -e ".[test,docs]"
+   mise install          # installs Python 3.12
+   uv sync --all-extras  # creates .venv, installs all deps
+
+This gives you a working environment with the extension installed in editable
+mode plus all test, docs, and dev dependencies (ruff, mypy).
+
+Available Tasks
+---------------
+
+All tasks are defined in ``.mise.toml`` and run via ``mise run <task>``:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 50
+
+   * - Task
+     - Description
+   * - ``mise run test``
+     - Run full test suite (unit + e2e)
+   * - ``mise run test-unit``
+     - Run unit/integration tests only
+   * - ``mise run test-e2e``
+     - Run e2e docs build test
+   * - ``mise run lint``
+     - Run ruff linter
+   * - ``mise run lint-fix``
+     - Run ruff linter with auto-fix
+   * - ``mise run format``
+     - Format code with ruff
+   * - ``mise run format-check``
+     - Check formatting without modifying
+   * - ``mise run typecheck``
+     - Run mypy type checker
+   * - ``mise run check``
+     - Run all checks (lint + format + mypy + test)
+   * - ``mise run docs``
+     - Build HTML documentation
+   * - ``mise run docs-clean``
+     - Clean and rebuild documentation
+   * - ``mise run build``
+     - Build sdist and wheel with uv
+   * - ``mise run clean``
+     - Remove build artifacts
+
+Before submitting a PR, run the full check suite:
+
+.. code-block:: bash
+
+   mise run check
+
+This runs ruff lint, ruff format check, mypy, and pytest in sequence.
 
 Running Tests
 -------------
 
 .. code-block:: bash
 
-   # Unit + integration tests
-   pytest tests/ -v
+   mise run test          # all tests
+   mise run test-unit     # unit/integration tests only
+   mise run test-e2e      # e2e docs build test only
 
-   # Build the documentation (eat-your-own-dogfood e2e)
-   pytest tests/test_docs_build.py -v
+The test suite includes an **e2e dogfood test** that builds this documentation
+project and verifies that ``needsvg`` directives produce working SVG output.
+If the docs build and the SVG assertions pass, the extension works.
 
-   # Build docs manually
-   sphinx-build -b html docs docs/_build/html
+Building Documentation
+----------------------
 
-The test suite includes an **e2e test** that builds this documentation project
-and verifies that ``needsvg`` directives produce working SVG output. This is
-the primary dogfood test -- if the docs build, the extension works.
+.. code-block:: bash
+
+   mise run docs          # build to docs/_build/html
+   mise run docs-clean    # clean + rebuild
+
+Open ``docs/_build/html/index.html`` in a browser to review.
+
+Packaging
+---------
+
+.. code-block:: bash
+
+   mise run build         # produces dist/*.tar.gz and dist/*.whl
+
+Uses `hatchling <https://hatch.pypa.io/>`_ as the build backend and
+`uv build <https://docs.astral.sh/uv/>`_ as the build frontend.
 
 Project Structure
 -----------------
@@ -36,24 +105,39 @@ Project Structure
 .. code-block:: text
 
    sphinx-needs-svg/
-   ├── src/sphinx_needs_svg/    # Extension source
-   │   ├── __init__.py          # Sphinx setup()
+   ├── .mise.toml               # mise tasks and Python version
+   ├── pyproject.toml            # package metadata, deps, tool config
+   ├── uv.lock                   # reproducible dependency lock
+   ├── LICENSE                   # MIT license
+   ├── README.md
+   ├── src/sphinx_needs_svg/     # extension source
+   │   ├── __init__.py           # Sphinx setup()
    │   ├── directives/
-   │   │   └── needsvg.py       # Directive, node, processor
-   │   └── jinja_context.py     # Jinja2 context with needs helpers
+   │   │   └── needsvg.py        # directive, node, processor
+   │   └── jinja_context.py      # Jinja2 context with needs helpers
    ├── tests/
    │   ├── conftest.py           # Sphinx testing fixtures
-   │   ├── test_needsvg.py       # Unit/integration tests
-   │   ├── test_docs_build.py    # E2E dogfood test
-   │   └── roots/                # Minimal Sphinx test projects
-   ├── docs/                     # Sphinx documentation (uses needsvg)
-   └── pyproject.toml
+   │   ├── test_needsvg.py       # unit/integration tests
+   │   ├── test_docs_build.py    # e2e dogfood test
+   │   └── roots/                # minimal Sphinx test projects
+   └── docs/                     # Sphinx docs (uses needsvg itself)
 
-Code Style
-----------
+Code Quality
+------------
 
-- Python 3.9+
-- Type hints on public APIs
+**Linting** -- `ruff <https://docs.astral.sh/ruff/>`_ with rules: ``E``,
+``F``, ``I``, ``UP``, ``B``, ``SIM``, ``RUF``.
+
+**Formatting** -- ruff format (black-compatible).
+
+**Type checking** -- `mypy <https://mypy-lang.org/>`_ in strict mode.
+``docutils`` and ``sphinx_needs`` imports have stubs ignored since those
+libraries don't ship type annotations.
+
+**Style conventions:**
+
+- Python 3.9+ compatible syntax
+- Type hints on all public APIs
 - ``from __future__ import annotations`` in all modules
 
 Testing Philosophy
@@ -64,8 +148,8 @@ Each test builds a small Sphinx project and asserts on the HTML output.
 
 The ``docs/`` directory itself is the main integration test. Every example
 on every page exercises the extension. The e2e test
-(``test_docs_build.py``) builds the docs with ``sphinx-build`` and checks
-for SVG content in the output.
+(``test_docs_build.py``) builds the docs and checks for SVG content
+in the output.
 
 Adding Features
 ---------------
@@ -73,7 +157,7 @@ Adding Features
 1. Write a failing test in ``tests/test_needsvg.py``
 2. Implement the feature
 3. Add an example to ``docs/examples.rst`` that exercises it
-4. Run the full suite: ``pytest tests/ -v``
+4. Run ``mise run check`` to verify everything passes
 5. Submit a PR
 
 Reporting Issues
@@ -84,4 +168,4 @@ Open an issue with:
 - What you expected
 - What happened
 - Minimal RST to reproduce
-- Sphinx and sphinx-needs versions
+- Sphinx and sphinx-needs versions (``pip list | grep sphinx``)
