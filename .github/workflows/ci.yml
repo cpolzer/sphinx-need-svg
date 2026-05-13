@@ -10,9 +10,10 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  pull-requests: write
 
 concurrency:
-  group: "pages-${{ github.ref }}"
+  group: "ci-${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:
@@ -86,12 +87,50 @@ jobs:
       - name: Build HTML docs
         run: uv run sphinx-build -b html docs docs/_build/html
 
-      - name: Upload docs artifact
+      - name: Upload docs artifact (for Pages deploy on main)
+        if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs/_build/html
 
-  deploy-preview:
+      - name: Upload docs preview artifact (for PR comment)
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-preview
+          path: docs/_build/html
+          retention-days: 7
+
+  docs-preview-comment:
+    name: Post Docs Preview Link
+    if: github.event_name == 'pull_request'
+    needs: docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Find existing comment
+        uses: peter-evans/find-comment@v3
+        id: find-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: '## Docs Preview'
+
+      - name: Post or update preview comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            ## Docs Preview
+
+            The documentation for this PR has been built successfully.
+
+            **Download the preview:** Go to the [Actions run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) → Artifacts → **docs-preview** and open `index.html` locally.
+
+            <sub>Built from ${{ github.event.pull_request.head.sha }} at ${{ github.event.pull_request.updated_at }}</sub>
+
+  deploy-pages:
     name: Deploy Pages
     if: github.ref == 'refs/heads/main'
     needs: docs
