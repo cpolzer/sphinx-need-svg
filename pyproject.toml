@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68.0", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sphinx-needs-svg"
+version = "0.1.0"
+description = "Sphinx-Needs extension for SVG diagrams with clickable need links"
+requires-python = ">=3.9"
+dependencies = [
+    "sphinx>=5.0",
+    "sphinx-needs>=2.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest", "pytest-regressions"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

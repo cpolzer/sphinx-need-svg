@@ -1,0 +1,1 @@
+sphinx_needs_svg

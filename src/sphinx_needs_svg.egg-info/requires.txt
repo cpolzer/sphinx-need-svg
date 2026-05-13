@@ -1,0 +1,6 @@
+sphinx>=5.0
+sphinx-needs>=2.0
+
+[test]
+pytest
+pytest-regressions
