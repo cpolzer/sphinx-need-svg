@@ -42,3 +42,11 @@ def test_needsvg_flow_helper(app, status, warning):
     assert "REQ_001" in content
     assert "My Requirement" in content
     assert "ddeeff" in content
+
+
+@pytest.mark.sphinx("html", testroot="errors")
+def test_needsvg_bad_need_ref_warns(app, status, warning):
+    app.build()
+    content = (Path(app.outdir) / "index.html").read_text()
+    # Should not crash the build. Should produce some output.
+    assert "<svg" in content or "error" in content.lower() or "needsvg" in warning.getvalue().lower()

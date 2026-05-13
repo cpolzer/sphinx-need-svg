@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from typing import Any, ClassVar, Sequence
 
 from docutils import nodes
@@ -7,6 +8,8 @@ from sphinx_needs_svg.jinja_context import render_jinja_svg
 from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxDirective
+
+logger = logging.getLogger(__name__)
 
 
 class Needsvg(nodes.General, nodes.Element):
@@ -64,7 +67,11 @@ def process_needsvg(app: Sphinx, doctree: nodes.document, docname: str) -> None:
             node.replace_self([])
             continue
 
-        svg_content = render_jinja_svg(data["content"], app)
+        try:
+            svg_content = render_jinja_svg(data["content"], app)
+        except Exception as e:
+            logger.warning(f"needsvg error at {data['docname']}:{data['lineno']}: {e}")
+            svg_content = f'<svg><text fill="red">needsvg error: {e}</text></svg>'
         options = data["options"]
 
         align = options.get("align", "center")
