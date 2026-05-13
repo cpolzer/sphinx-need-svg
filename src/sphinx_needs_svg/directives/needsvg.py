@@ -85,8 +85,12 @@ def process_needsvg(app: Sphinx, doctree: nodes.document, docname: str) -> None:
         ]
 
         if options.get("debug"):
-            code = nodes.literal_block(svg_content, svg_content)
-            code["language"] = "xml"
-            content_nodes.append(code)
+            raw_source = data["content"]
+            rst_block = ".. needsvg::\n\n"
+            for line in raw_source.splitlines():
+                rst_block += f"   {line}\n"
+            code = nodes.literal_block(rst_block, rst_block)
+            code["language"] = "rst"
+            content_nodes.insert(0, code)
 
         node.replace_self(content_nodes)

@@ -16,7 +16,7 @@ dependencies = [
 
 [project.optional-dependencies]
 test = ["pytest", "pytest-regressions"]
-docs = ["sphinx", "sphinx-needs", "alabaster"]
+docs = ["sphinx", "sphinx-needs", "furo"]
 dev = [
     "sphinx-needs-svg[test,docs]",
     "ruff",

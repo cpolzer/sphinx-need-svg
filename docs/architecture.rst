@@ -67,6 +67,7 @@ Component Diagram
 ~~~~~~~~~~~~~~~~~
 
 .. needsvg::
+   :debug:
 
    <svg width="680" height="280" xmlns="http://www.w3.org/2000/svg">
      <defs>

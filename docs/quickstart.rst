@@ -47,6 +47,7 @@ Define some needs, then visualise them with ``needsvg``:
 Now render them as an SVG diagram with clickable links:
 
 .. needsvg::
+   :debug:
 
    <svg width="500" height="160" xmlns="http://www.w3.org/2000/svg">
      <defs>
@@ -94,6 +95,7 @@ Using ``flow()`` for Quick Cards
 For simple cases, the ``flow()`` helper renders a pre-styled card:
 
 .. needsvg::
+   :debug:
 
    <svg width="300" height="60" xmlns="http://www.w3.org/2000/svg">
      <g transform="translate(10, 5)">

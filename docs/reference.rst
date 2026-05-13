@@ -44,7 +44,7 @@ Options
    * - ``:debug:``
      - flag
      -
-     - Show the raw SVG source as a code block below the rendered diagram
+     - Show the raw RST/Jinja source as a code block above the rendered diagram
 
 Jinja2 Helpers
 --------------

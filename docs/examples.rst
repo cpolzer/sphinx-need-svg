@@ -33,6 +33,7 @@ A complete requirements-to-test traceability chain:
    Confirm data files are encrypted by inspecting raw tablespace.
 
 .. needsvg::
+   :debug:
 
    <svg width="680" height="80" xmlns="http://www.w3.org/2000/svg">
      <defs>
@@ -70,6 +71,7 @@ Dynamic Dashboard
 Automatically render all requirements using ``filter()``:
 
 .. needsvg::
+   :debug:
 
    <svg width="600" height="{{ (filter("type == 'req'") | length) * 55 + 10 }}"
         xmlns="http://www.w3.org/2000/svg">
@@ -91,6 +93,7 @@ Flow Cards
 Using ``flow()`` for a compact view:
 
 .. needsvg::
+   :debug:
 
    <svg width="560" height="60" xmlns="http://www.w3.org/2000/svg">
      <g transform="translate(5, 5)">{{ flow('REQ_ENC') }}</g>
@@ -102,8 +105,8 @@ Using ``flow()`` for a compact view:
 Debug Mode
 ----------
 
-The ``:debug:`` option shows the raw SVG source below the rendered diagram,
-useful during development:
+The ``:debug:`` option shows the raw RST/Jinja source above the rendered
+diagram, useful during development:
 
 .. needsvg::
    :debug:

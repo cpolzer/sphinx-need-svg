@@ -22,5 +22,5 @@ needs_extra_links = [
 ]
 
 # -- HTML output --
-html_theme = "alabaster"
+html_theme = "furo"
 exclude_patterns = ["_build", "superpowers"]
