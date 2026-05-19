@@ -107,14 +107,21 @@ def sync_drawio_content(
 
     # Re-encode and reassemble
     new_body = _encode_diagram(rendered_mxgraph)
-    new_mxfile = (
-        diagram_match.group(1) + new_body + diagram_match.group(3)
-    )
+    new_mxfile = diagram_match.group(1) + new_body + diagram_match.group(3)
     # Reconstruct the full mxfile string (replace only the diagram body)
-    new_mxfile_full = mxfile_xml[: diagram_match.start()] + new_mxfile + mxfile_xml[diagram_match.end() :]
+    new_mxfile_full = (
+        mxfile_xml[: diagram_match.start()]
+        + new_mxfile
+        + mxfile_xml[diagram_match.end() :]
+    )
 
     # XML-escape for the attribute value
-    escaped = new_mxfile_full.replace("&", "&amp;").replace('"', "&quot;").replace("<", "&lt;").replace(">", "&gt;")
+    escaped = (
+        new_mxfile_full.replace("&", "&amp;")
+        .replace('"', "&quot;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+    )
 
     new_svg = (
         rendered_svg[: content_match.start(2)]

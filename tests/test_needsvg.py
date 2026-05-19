@@ -86,9 +86,10 @@ def test_needsvg_drawio_syncs_content_attr(app, status, warning):
     content = (Path(app.outdir) / "index.html").read_text()
     # The content attribute should contain the rendered title, not Jinja
     # We need to decode it to verify
-    from sphinx_need_svg.drawio import _decode_diagram, _DIAGRAM_BODY_RE
     import re
     from xml.etree import ElementTree as ET
+
+    from sphinx_need_svg.drawio import _DIAGRAM_BODY_RE, _decode_diagram
 
     # Extract the content attribute containing mxfile from the output HTML
     m = re.search(r'content="([^"]*mxfile[^"]*)"', content)
