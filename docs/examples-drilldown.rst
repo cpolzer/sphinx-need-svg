@@ -108,7 +108,7 @@ Level 2 -- Build Stage
    :id: ARCH_BUILD
    :implements: ARCH_PIPELINE
 
-   Detail view of the Build stage.  Click Lint to drill into its steps.
+   Detail view of the Build stage.  Click any job to drill into its steps.
 
    .. needsvg::
 
@@ -131,7 +131,7 @@ Level 2 -- Build Stage
               font-weight="bold" fill="#d4836a">Build Stage</text>
         {% set jobs = [
           {"id": "JOB_LINT",    "color": "#FFF3E0", "stroke": "#E65100", "arch": "ARCH_LINT"},
-          {"id": "JOB_COMPILE", "color": "#E3F2FD", "stroke": "#1565C0"},
+          {"id": "JOB_COMPILE", "color": "#E3F2FD", "stroke": "#1565C0", "arch": "ARCH_COMPILE"},
         ] %}
         {% for j in jobs %}
           {% set x = loop.index0 * 250 + 10 %}
@@ -189,7 +189,7 @@ Level 2 -- Test Stage
    :id: ARCH_TEST
    :implements: ARCH_PIPELINE
 
-   Detail view of the Test stage.
+   Detail view of the Test stage.  Click any job to drill into its steps.
 
    .. needsvg::
 
@@ -211,18 +211,27 @@ Level 2 -- Test Stage
         <text x="250" y="32" text-anchor="middle" font-size="13"
               font-weight="bold" fill="#4CAF50">Test Stage</text>
         {% set jobs = [
-          {"id": "JOB_UNIT", "color": "#E8F5E9", "stroke": "#2E7D32"},
-          {"id": "JOB_DOCS", "color": "#FFF8E1", "stroke": "#F9A825"},
+          {"id": "JOB_UNIT", "color": "#E8F5E9", "stroke": "#2E7D32", "arch": "ARCH_UNIT"},
+          {"id": "JOB_DOCS", "color": "#FFF8E1", "stroke": "#F9A825", "arch": "ARCH_DOCS"},
         ] %}
         {% for j in jobs %}
           {% set x = loop.index0 * 250 + 10 %}
+          {% if j.arch is defined %}
+          <a href="{{ ref(j.arch) }}">
+          {% else %}
           <a href="{{ ref(j.id) }}">
+          {% endif %}
             <rect x="{{ x }}" y="44" width="220" height="55" rx="8"
-                  fill="{{ j.color }}" stroke="{{ j.stroke }}" stroke-width="2"/>
+                  fill="{{ j.color }}" stroke="{{ j.stroke }}" stroke-width="2"
+                  style="cursor: pointer;"/>
             <text x="{{ x + 110 }}" y="66" text-anchor="middle"
                   font-size="10" fill="#555">{{ j.id }}</text>
             <text x="{{ x + 110 }}" y="84" text-anchor="middle"
                   font-size="12" font-weight="bold">{{ needs[j.id].title }}</text>
+            {% if j.arch is defined %}
+            <text x="{{ x + 205 }}" y="92" text-anchor="end"
+                  font-size="9" fill="#999">&#x25BC; drill down</text>
+            {% endif %}
           </a>
           {% if not loop.last %}
             <line x1="{{ x + 220 }}" y1="71" x2="{{ x + 250 }}" y2="71"
@@ -337,7 +346,7 @@ Level 3 -- Lint Job Steps
 
    .. needsvg::
 
-      <svg width="500" height="120" xmlns="http://www.w3.org/2000/svg">
+      <svg width="500" height="140" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <marker id="arr5" viewBox="0 0 10 10" refX="10" refY="5"
                   markerWidth="6" markerHeight="6" orient="auto">
@@ -373,4 +382,221 @@ Level 3 -- Lint Job Steps
                   stroke="#666" stroke-width="1.5" marker-end="url(#arr5)"/>
           {% endif %}
         {% endfor %}
+        <!-- Sibling navigation -->
+        <text x="140" y="130" text-anchor="end" font-size="10" fill="#aaa">
+          Build jobs:</text>
+        <a href="{{ ref('ARCH_LINT') }}"><text x="150" y="130" font-size="10"
+           font-weight="bold" fill="#E65100">Lint</text></a>
+        <a href="{{ ref('ARCH_COMPILE') }}"><text x="185" y="130" font-size="10"
+           fill="#1565C0">Compile</text></a>
+      </svg>
+
+----
+
+Level 3 -- Compile Job Steps
+-----------------------------
+
+.. req:: Install dependencies
+   :id: STEP_DEPS
+   :implements: JOB_COMPILE
+
+   Install build dependencies via ``uv pip install``.
+
+.. req:: Build wheel
+   :id: STEP_WHEEL
+   :implements: JOB_COMPILE
+
+   Run ``hatchling build`` to produce the distributable wheel.
+
+.. arch:: Compile Job Steps Detail
+   :id: ARCH_COMPILE
+   :implements: ARCH_BUILD
+
+   Detail view of the Compile job's individual steps.
+
+   .. needsvg::
+
+      <svg width="500" height="140" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr6" viewBox="0 0 10 10" refX="10" refY="5"
+                  markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#666"/>
+          </marker>
+        </defs>
+        <!-- Back navigation -->
+        <a href="{{ ref('ARCH_BUILD') }}">
+          <text x="8" y="14" font-size="11" fill="#1565C0"
+                style="cursor: pointer;">&#x25C0; Build Stage</text>
+        </a>
+        <!-- Breadcrumb -->
+        <text x="250" y="14" text-anchor="middle" font-size="10" fill="#999">
+          CI Pipeline &#x25B8; Build &#x25B8; Compile Job</text>
+        <text x="250" y="32" text-anchor="middle" font-size="13"
+              font-weight="bold" fill="#1565C0">Compile Job -- Steps</text>
+        {% set steps = [
+          {"id": "STEP_DEPS",  "color": "#E3F2FD", "stroke": "#1565C0"},
+          {"id": "STEP_WHEEL", "color": "#BBDEFB", "stroke": "#0D47A1"},
+        ] %}
+        {% for s in steps %}
+          {% set x = loop.index0 * 250 + 10 %}
+          <a href="{{ ref(s.id) }}">
+            <rect x="{{ x }}" y="44" width="220" height="55" rx="8"
+                  fill="{{ s.color }}" stroke="{{ s.stroke }}" stroke-width="2"/>
+            <text x="{{ x + 110 }}" y="66" text-anchor="middle"
+                  font-size="10" fill="#555">{{ s.id }}</text>
+            <text x="{{ x + 110 }}" y="84" text-anchor="middle"
+                  font-size="12" font-weight="bold">{{ needs[s.id].title }}</text>
+          </a>
+          {% if not loop.last %}
+            <line x1="{{ x + 220 }}" y1="71" x2="{{ x + 250 }}" y2="71"
+                  stroke="#666" stroke-width="1.5" marker-end="url(#arr6)"/>
+          {% endif %}
+        {% endfor %}
+        <!-- Sibling navigation -->
+        <text x="140" y="130" text-anchor="end" font-size="10" fill="#aaa">
+          Build jobs:</text>
+        <a href="{{ ref('ARCH_LINT') }}"><text x="150" y="130" font-size="10"
+           fill="#E65100">Lint</text></a>
+        <a href="{{ ref('ARCH_COMPILE') }}"><text x="185" y="130" font-size="10"
+           font-weight="bold" fill="#1565C0">Compile</text></a>
+      </svg>
+
+----
+
+Level 3 -- Unit Test Job Steps
+------------------------------
+
+.. req:: Collect tests
+   :id: STEP_COLLECT
+   :implements: JOB_UNIT
+
+   Run ``pytest --collect-only`` to discover test cases.
+
+.. req:: Run tests with coverage
+   :id: STEP_PYTEST
+   :implements: JOB_UNIT
+
+   Execute ``pytest --cov`` and generate a coverage report.
+
+.. arch:: Unit Test Job Steps Detail
+   :id: ARCH_UNIT
+   :implements: ARCH_TEST
+
+   Detail view of the Unit test job's individual steps.
+
+   .. needsvg::
+
+      <svg width="500" height="140" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr7" viewBox="0 0 10 10" refX="10" refY="5"
+                  markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#666"/>
+          </marker>
+        </defs>
+        <!-- Back navigation -->
+        <a href="{{ ref('ARCH_TEST') }}">
+          <text x="8" y="14" font-size="11" fill="#2E7D32"
+                style="cursor: pointer;">&#x25C0; Test Stage</text>
+        </a>
+        <!-- Breadcrumb -->
+        <text x="250" y="14" text-anchor="middle" font-size="10" fill="#999">
+          CI Pipeline &#x25B8; Test &#x25B8; Unit Test Job</text>
+        <text x="250" y="32" text-anchor="middle" font-size="13"
+              font-weight="bold" fill="#2E7D32">Unit Test Job -- Steps</text>
+        {% set steps = [
+          {"id": "STEP_COLLECT", "color": "#E8F5E9", "stroke": "#2E7D32"},
+          {"id": "STEP_PYTEST",  "color": "#C8E6C9", "stroke": "#1B5E20"},
+        ] %}
+        {% for s in steps %}
+          {% set x = loop.index0 * 250 + 10 %}
+          <a href="{{ ref(s.id) }}">
+            <rect x="{{ x }}" y="44" width="220" height="55" rx="8"
+                  fill="{{ s.color }}" stroke="{{ s.stroke }}" stroke-width="2"/>
+            <text x="{{ x + 110 }}" y="66" text-anchor="middle"
+                  font-size="10" fill="#555">{{ s.id }}</text>
+            <text x="{{ x + 110 }}" y="84" text-anchor="middle"
+                  font-size="12" font-weight="bold">{{ needs[s.id].title }}</text>
+          </a>
+          {% if not loop.last %}
+            <line x1="{{ x + 220 }}" y1="71" x2="{{ x + 250 }}" y2="71"
+                  stroke="#666" stroke-width="1.5" marker-end="url(#arr7)"/>
+          {% endif %}
+        {% endfor %}
+        <!-- Sibling navigation -->
+        <text x="140" y="130" text-anchor="end" font-size="10" fill="#aaa">
+          Test jobs:</text>
+        <a href="{{ ref('ARCH_UNIT') }}"><text x="150" y="130" font-size="10"
+           font-weight="bold" fill="#2E7D32">Unit</text></a>
+        <a href="{{ ref('ARCH_DOCS') }}"><text x="185" y="130" font-size="10"
+           fill="#F9A825">Docs</text></a>
+      </svg>
+
+----
+
+Level 3 -- Docs Build Job Steps
+--------------------------------
+
+.. req:: Generate RST from sources
+   :id: STEP_GENERATE
+   :implements: JOB_DOCS
+
+   Auto-generate API docs from Python source with ``sphinx-apidoc``.
+
+.. req:: Sphinx build
+   :id: STEP_SPHINX
+   :implements: JOB_DOCS
+
+   Run ``sphinx-build -W`` with warnings-as-errors to produce HTML.
+
+.. arch:: Docs Build Job Steps Detail
+   :id: ARCH_DOCS
+   :implements: ARCH_TEST
+
+   Detail view of the Docs build job's individual steps.
+
+   .. needsvg::
+
+      <svg width="500" height="140" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr8" viewBox="0 0 10 10" refX="10" refY="5"
+                  markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#666"/>
+          </marker>
+        </defs>
+        <!-- Back navigation -->
+        <a href="{{ ref('ARCH_TEST') }}">
+          <text x="8" y="14" font-size="11" fill="#F9A825"
+                style="cursor: pointer;">&#x25C0; Test Stage</text>
+        </a>
+        <!-- Breadcrumb -->
+        <text x="250" y="14" text-anchor="middle" font-size="10" fill="#999">
+          CI Pipeline &#x25B8; Test &#x25B8; Docs Build Job</text>
+        <text x="250" y="32" text-anchor="middle" font-size="13"
+              font-weight="bold" fill="#F9A825">Docs Build Job -- Steps</text>
+        {% set steps = [
+          {"id": "STEP_GENERATE", "color": "#FFF8E1", "stroke": "#F9A825"},
+          {"id": "STEP_SPHINX",   "color": "#FFF9C4", "stroke": "#F57F17"},
+        ] %}
+        {% for s in steps %}
+          {% set x = loop.index0 * 250 + 10 %}
+          <a href="{{ ref(s.id) }}">
+            <rect x="{{ x }}" y="44" width="220" height="55" rx="8"
+                  fill="{{ s.color }}" stroke="{{ s.stroke }}" stroke-width="2"/>
+            <text x="{{ x + 110 }}" y="66" text-anchor="middle"
+                  font-size="10" fill="#555">{{ s.id }}</text>
+            <text x="{{ x + 110 }}" y="84" text-anchor="middle"
+                  font-size="12" font-weight="bold">{{ needs[s.id].title }}</text>
+          </a>
+          {% if not loop.last %}
+            <line x1="{{ x + 220 }}" y1="71" x2="{{ x + 250 }}" y2="71"
+                  stroke="#666" stroke-width="1.5" marker-end="url(#arr8)"/>
+          {% endif %}
+        {% endfor %}
+        <!-- Sibling navigation -->
+        <text x="140" y="130" text-anchor="end" font-size="10" fill="#aaa">
+          Test jobs:</text>
+        <a href="{{ ref('ARCH_UNIT') }}"><text x="150" y="130" font-size="10"
+           fill="#2E7D32">Unit</text></a>
+        <a href="{{ ref('ARCH_DOCS') }}"><text x="185" y="130" font-size="10"
+           font-weight="bold" fill="#F9A825">Docs</text></a>
       </svg>
