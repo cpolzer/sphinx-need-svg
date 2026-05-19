@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="209px" height="201px" viewBox="-0.5 -0.5 209 201" content="&lt;mxfile&gt;&lt;diagram id=&quot;drawio-needsvg&quot; name=&quot;Page-1&quot;&gt;ZZBBa8JAEIX/yrCCxyaRUoTNegniyULrsZSyzU6yi5Ns2IwmVvzvXTU9SG/z5j2GeV/ejJugO7v1BmmVB+95lTdjgUTgjBKpSB50JqDTAVv+by0EHDUdUIn39dvX+rWYz0Ytz2doEU3/Mded7+WfdROfT+yYEC6XW7QkV+6BPbT66GrNKKDnE8WDwR9ag0ZlcrCOcdfpEtUQ/5aWG1KprBxR4ckHNTMal1Upew5+j9PupVzidyUr3/LO/aDKFjI+i4FxfKiUiWujDfoGOZwgms8CBmfYxnppKsCiqy1PQvdK1FP2yiK5w4jDHWPywPYX&lt;/diagram&gt;&lt;/mxfile&gt;">
+    <defs/>
+    <g>
+        <a xlink:href="{{ ref('REQ_ENC') }}">
+            <rect x="4" y="0" width="200" height="200" rx="8" fill="#dae8fc" stroke="#6c8ebf" stroke-width="2" style="cursor: pointer;"/>
+            <text x="104" y="85" fill="#555" font-family="Helvetica" font-size="11px" text-anchor="middle">
+                REQ_ENC
+            </text>
+            <text x="104" y="110" fill="#000" font-family="Helvetica" font-size="13px" font-weight="bold" text-anchor="middle">
+                {{ needs['REQ_ENC'].title }}
+            </text>
+            <text x="104" y="135" fill="#999" font-family="Helvetica" font-size="10px" text-anchor="middle">
+                click to navigate
+            </text>
+        </a>
+    </g>
+</svg>

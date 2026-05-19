@@ -10,6 +10,7 @@ from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxDirective
 
+from sphinx_need_svg.drawio import sync_drawio_content
 from sphinx_need_svg.jinja_context import render_jinja_svg
 
 logger = logging.getLogger(__name__)
@@ -102,7 +103,8 @@ def process_needsvg(app: Sphinx, doctree: nodes.document, docname: str) -> None:
             continue
 
         try:
-            svg_content = render_jinja_svg(data["content"], app)
+            svg_content, jinja_ctx = render_jinja_svg(data["content"], app)
+            svg_content = sync_drawio_content(svg_content, jinja_ctx)
         except Exception as e:
             logger.warning(f"needsvg error at {data['docname']}:{data['lineno']}: {e}")
             svg_content = f'<svg><text fill="red">needsvg error: {e}</text></svg>'

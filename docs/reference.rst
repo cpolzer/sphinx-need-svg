@@ -43,6 +43,10 @@ Options
      - Path to an SVG/Jinja2 template file, relative to the current document.
        When set, the file content is used instead of the directive body.
        Sphinx tracks the file as a dependency and rebuilds when it changes.
+       Works with draw.io SVG exports -- see :doc:`examples` for constraints
+       on which Jinja helpers are safe to use inside drawio SVGs.  When a
+       drawio ``content`` attribute is present, Jinja expressions in cell
+       labels are rendered and the attribute is updated in the build output.
    * - ``:width:``
      - string
      - ``100%``

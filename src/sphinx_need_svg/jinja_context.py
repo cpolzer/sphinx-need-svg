@@ -76,9 +76,14 @@ class SvgJinjaContext:
         }
 
 
-def render_jinja_svg(content: str, app: Any) -> str:
-    """Render a Jinja2 template string with needs-aware context."""
+def render_jinja_svg(content: str, app: Any) -> tuple[str, dict[str, Any]]:
+    """Render a Jinja2 template string with needs-aware context.
+
+    Returns the rendered SVG string and the Jinja context dict (for reuse
+    by downstream processors such as the drawio content-attribute sync).
+    """
     ctx = SvgJinjaContext(app)
     env = Environment()
     template = env.from_string(content)
-    return template.render(**ctx.get_context())
+    context = ctx.get_context()
+    return template.render(**context), context

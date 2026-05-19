@@ -1,4 +1,4 @@
-# sphinx-need-svg v0.2.0
+# sphinx-need-svg v0.3.0
 
 A Sphinx-Needs extension for rendering SVG diagrams with clickable links to
 needs entities.  Write SVG markup with Jinja2 templating in your RST docs.
@@ -47,7 +47,7 @@ The directive body is an SVG template processed through Jinja2 at build time.
 | `:height:` | string | `auto` | SVG container height |
 | `:align:` | choice | `center` | Horizontal alignment: `left`, `center`, or `right` |
 | `:debug:` | flag | off | Show raw RST/Jinja source as a code block above the rendered SVG |
-| `:file:` | path | -- | Load SVG/Jinja2 template from an external file (relative to source doc) |
+| `:file:` | path | -- | Load SVG/Jinja2 template from an external file (relative to source doc). Works with `.drawio.svg` files -- drawio `content` attribute is synced at build time. |
 
 **Note:** If both `:file:` and inline content are provided, `:file:` wins.
 
@@ -193,3 +193,18 @@ Render all needs of a type automatically:
 4. **Unescaped characters in SVG** -- Use `&amp;`, `&lt;`, `&gt;` in `<text>`
 5. **Relative `:file:` paths** -- Relative to the source document, not project root
 6. **SVG `id` collisions** -- Use unique IDs for `<defs>` markers across blocks
+7. **`flow()` in drawio SVGs** -- Do not use `flow()` or `filter()` inside drawio-exported SVGs; they return SVG markup that conflicts with drawio's `<foreignObject>` wrappers. Use only `ref()` and `needs[]` accessors.
+
+## Drawio Integration
+
+`.drawio.svg` files can be loaded via `:file:`. At build time:
+
+1. Jinja expressions in visible SVG elements (`<text>`, `<a xlink:href>`) are rendered normally.
+2. If the SVG has a drawio `content` attribute (embedded mxfile), Jinja expressions in cell `value` attributes are also rendered and the attribute is updated in the output.
+3. The source file is never modified -- sync only affects build output.
+
+**Safe Jinja in drawio shapes:**
+- `{{ ref('NEED_ID') }}` in link targets
+- `{{ needs['NEED_ID'].title }}` in shape labels
+
+**Unsafe:** `{{ flow('...') }}`, `{{ filter(...) }}` -- these return SVG markup.

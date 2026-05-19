@@ -70,3 +70,38 @@ def test_needsvg_file_not_found(app, status, warning):
     app.build()
     content = (Path(app.outdir) / "index.html").read_text()
     assert "file not found" in content.lower() or "nonexistent" in content
+
+
+@pytest.mark.sphinx("html", testroot="drawio")
+def test_needsvg_drawio_renders_visible_svg(app, status, warning):
+    app.build()
+    content = (Path(app.outdir) / "index.html").read_text()
+    assert "Drawio Requirement" in content
+    assert 'href="' in content
+
+
+@pytest.mark.sphinx("html", testroot="drawio")
+def test_needsvg_drawio_syncs_content_attr(app, status, warning):
+    app.build()
+    content = (Path(app.outdir) / "index.html").read_text()
+    # The content attribute should contain the rendered title, not Jinja
+    # We need to decode it to verify
+    from sphinx_need_svg.drawio import _decode_diagram, _DIAGRAM_BODY_RE
+    import re
+    from xml.etree import ElementTree as ET
+
+    # Extract the content attribute containing mxfile from the output HTML
+    m = re.search(r'content="([^"]*mxfile[^"]*)"', content)
+    assert m is not None, "content attribute with mxfile not found in output"
+    raw = m.group(1)
+    # XML-unescape
+    dummy = ET.fromstring(f'<x v="{raw}"/>')
+    mxfile_xml = dummy.get("v", "")
+    dm = _DIAGRAM_BODY_RE.search(mxfile_xml)
+    assert dm is not None, "diagram body not found in content attribute"
+    mxgraph_xml = _decode_diagram(dm.group(2).strip())
+    assert mxgraph_xml is not None, "could not decode diagram"
+    # The rendered mxGraphModel should contain the resolved title
+    assert "Drawio Requirement" in mxgraph_xml
+    # And should NOT contain raw Jinja expressions
+    assert "{{" not in mxgraph_xml

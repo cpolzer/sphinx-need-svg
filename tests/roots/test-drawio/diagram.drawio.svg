@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="209px" height="65px" viewBox="-0.5 -0.5 209 65" content="&lt;mxfile&gt;&lt;diagram id=&quot;test&quot; name=&quot;Page-1&quot;&gt;ZZBBa8JAEIX/yjAFj00iIkKyXmzx5KG9liKrOzGLk0zYHduI+N+7Ei+htzfzHsz7pmqHbbB9sxNHvK6CiK6rdtgQM3hnMMdsMhcIvQ3U6X9rjvBj+UIGbzfoiFz8mtleYvn5/rF/K0b9/apemeB+R4h65ZQOcukcOVOUtWfeCEswL87Sqj6WUYOc6blbHld0qMt0hoLSMClT4KPLlqQlDVdI5gLh1zttUrE8R2jIn5oUXCZto8HTM/qAyEaKJEb+bPKUPw==&lt;/diagram&gt;&lt;/mxfile&gt;">
+    <defs/>
+    <g>
+        <a xlink:href="{{ ref('REQ_D1') }}">
+            <rect x="4" y="0" width="200" height="60" rx="8" fill="#dae8fc" stroke="#6c8ebf" stroke-width="2"/>
+            <text x="104" y="35" fill="#000" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                {{ needs['REQ_D1'].title }}
+            </text>
+        </a>
+    </g>
+</svg>

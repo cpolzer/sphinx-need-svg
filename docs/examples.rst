@@ -9,6 +9,44 @@ Examples
 This page demonstrates ``needsvg`` with real sphinx-needs entities defined
 right here -- eating our own dog food.
 
+Drawio File Usage
+-----------------
+
+You can use `draw.io <https://www.drawio.com/>`_ to design your SVG diagrams
+visually, then load them via the ``:file:`` option.  Jinja2 expressions
+inside the SVG are rendered at build time, so you get clickable links to
+sphinx-needs entities from a diagram you designed in a GUI.
+
+**Drawio content sync:** When the SVG contains a drawio ``content`` attribute
+(the embedded mxfile diagram data), ``needsvg`` automatically renders Jinja
+expressions inside the diagram's cell labels at build time and updates the
+``content`` attribute in the output.  This means the built HTML contains a
+drawio SVG where both the visible SVG elements *and* the drawio diagram data
+reflect the resolved sphinx-needs values.  The source ``.drawio.svg`` file is
+never modified -- sync only happens in the build output.
+
+.. important::
+
+   **Only use simple Jinja expressions** inside drawio-exported SVGs:
+
+   - ``{{ ref('NEED_ID') }}`` in ``<a xlink:href="...">`` attributes
+   - ``{{ needs['NEED_ID'].title }}`` (or ``.id``, ``.type``, ...) inside
+     ``<text>`` elements and drawio shape labels
+
+   **Do not** use ``{{ flow('...') }}`` or ``{{ filter(...) }}`` -- these
+   return SVG markup that conflicts with drawio's ``<foreignObject>`` /
+   ``<switch>`` / ``<text>`` wrappers and will produce broken output.
+
+   When editing in drawio, place the Jinja expression as the text content of
+   a shape.  Then **export as SVG** (not as ``.drawio`` XML).  If drawio
+   wraps your text in ``<foreignObject>``, edit the exported file to move the
+   expression into a plain ``<text>`` element or an ``<a xlink:href>``
+   attribute.
+
+.. needsvg::
+   :file: .media/example.drawio.svg
+   :debug:
+
 Traceability Chain
 ------------------
 

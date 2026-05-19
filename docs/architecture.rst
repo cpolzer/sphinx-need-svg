@@ -54,7 +54,17 @@ Components
 
    Orchestrates Jinja2 rendering: creates ``SvgJinjaContext``, builds a
    ``jinja2.Environment``, compiles the template, and returns the rendered
-   SVG string.
+   SVG string together with the Jinja context (for reuse by drawio sync).
+
+.. spec:: Drawio content sync
+   :id: ARCH_DRAWIO
+
+   If the rendered SVG contains a drawio ``content`` attribute (embedded
+   mxfile diagram data), decodes it (base64 + raw deflate), renders Jinja
+   expressions in mxCell ``value`` attributes using the same context, and
+   re-encodes the result.  Called by ``process_needsvg`` after Jinja
+   rendering.  Source files are never modified -- sync only affects build
+   output.
 
 .. spec:: setup() entry point
    :id: ARCH_SETUP
@@ -177,10 +187,14 @@ Data Flow
    b. Compiles the directive body as a Jinja2 template.
    c. Renders it with ``needs``, ``ref()``, ``filter()``, ``flow()`` in
       context.
+   d. Returns the rendered SVG and the Jinja context dict.
 
-6. The rendered SVG string is wrapped in an alignment ``<div>`` and emitted
+6. If the rendered SVG contains a drawio ``content`` attribute,
+   ``sync_drawio_content()`` decodes the mxfile data, renders Jinja
+   expressions in cell labels, and updates the attribute in the output.
+7. The rendered SVG string is wrapped in an alignment ``<div>`` and emitted
    as ``nodes.raw(..., format="html")`` -- replacing the placeholder.
-7. If rendering fails, a warning is logged and an error SVG is shown instead.
+8. If rendering fails, a warning is logged and an error SVG is shown instead.
 
 File Map
 --------
@@ -189,6 +203,7 @@ File Map
 
    src/sphinx_need_svg/
    ├── __init__.py              # setup() entry point
+   ├── drawio.py                # Drawio content attribute sync (decode/encode/render)
    ├── directives/
    │   ├── __init__.py
    │   └── needsvg.py           # Needsvg node, NeedsvgDirective, process_needsvg
