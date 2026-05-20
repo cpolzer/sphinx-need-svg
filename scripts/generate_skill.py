@@ -3,8 +3,8 @@
 
 from __future__ import annotations
 
-import ast
 import argparse
+import ast
 import sys
 import warnings
 from pathlib import Path
@@ -55,11 +55,7 @@ def extract_directive_options() -> list[str]:
                         value = item.value
                         break
             if value is not None and isinstance(value, ast.Dict):
-                return [
-                    str(k.value)
-                    for k in value.keys
-                    if isinstance(k, ast.Constant)
-                ]
+                return [str(k.value) for k in value.keys if isinstance(k, ast.Constant)]
     raise RuntimeError("Could not find option_spec in NeedsvgDirective")
 
 
@@ -86,20 +82,24 @@ def extract_jinja_helpers() -> list[dict[str, str | bool]]:
             )
 
             if is_property:
-                helpers.append({
-                    "name": name,
-                    "signature": name,
-                    "docstring": docstring,
-                    "is_property": True,
-                })
+                helpers.append(
+                    {
+                        "name": name,
+                        "signature": name,
+                        "docstring": docstring,
+                        "is_property": True,
+                    }
+                )
             else:
                 args = [a.arg for a in item.args.args if a.arg != "self"]
-                helpers.append({
-                    "name": name,
-                    "signature": f"{name}({', '.join(args)})",
-                    "docstring": docstring,
-                    "is_property": False,
-                })
+                helpers.append(
+                    {
+                        "name": name,
+                        "signature": f"{name}({', '.join(args)})",
+                        "docstring": docstring,
+                        "is_property": False,
+                    }
+                )
 
     if not helpers:
         warnings.warn(
@@ -121,12 +121,8 @@ def extract_needs_types() -> list[dict[str, str]]:
     # Use AST to find the assignment reliably
     tree = ast.parse(source)
     for node in ast.walk(tree):
-        if (
-            isinstance(node, ast.Assign)
-            and any(
-                isinstance(t, ast.Name) and t.id == "needs_types"
-                for t in node.targets
-            )
+        if isinstance(node, ast.Assign) and any(
+            isinstance(t, ast.Name) and t.id == "needs_types" for t in node.targets
         ):
             # Extract the source text for this node and eval it
             try:
@@ -155,12 +151,8 @@ def extract_needs_links() -> dict[str, dict[str, str]]:
     source = conf_path.read_text()
     tree = ast.parse(source)
     for node in ast.walk(tree):
-        if (
-            isinstance(node, ast.Assign)
-            and any(
-                isinstance(t, ast.Name) and t.id == "needs_links"
-                for t in node.targets
-            )
+        if isinstance(node, ast.Assign) and any(
+            isinstance(t, ast.Name) and t.id == "needs_links" for t in node.targets
         ):
             try:
                 return ast.literal_eval(node.value)
