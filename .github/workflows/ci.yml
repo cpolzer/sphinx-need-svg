@@ -181,19 +181,13 @@ jobs:
       - name: Bump version with commitizen
         id: cz
         run: |
-          uv run cz bump --yes --changelog 2>&1 | tee /tmp/cz-output.txt
+          uv run cz bump --yes 2>&1 | tee /tmp/cz-output.txt
           if grep -q "NO_INCREMENT_DETECTED" /tmp/cz-output.txt || grep -q "is not a bump" /tmp/cz-output.txt; then
             echo "bumped=false" >> "$GITHUB_OUTPUT"
           else
             echo "bumped=true" >> "$GITHUB_OUTPUT"
             echo "version=$(uv run cz version)" >> "$GITHUB_OUTPUT"
           fi
-
-      - name: Debug bump
-        run: |
-          git log --oneline -3
-          git tag --list
-          git status
 
       - name: Push version bump and tag
         if: steps.cz.outputs.bumped == 'true'
