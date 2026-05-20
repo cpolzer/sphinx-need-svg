@@ -191,7 +191,7 @@ jobs:
 
       - name: Push version bump and tag
         if: steps.cz.outputs.bumped == 'true'
-        run: git push --follow-tags
+        run: git push origin main --follow-tags
 
   deploy-docs:
     name: Build & Deploy Pages
