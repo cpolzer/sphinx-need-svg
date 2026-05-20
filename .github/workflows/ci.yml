@@ -188,7 +188,12 @@ jobs:
             echo "bumped=true" >> "$GITHUB_OUTPUT"
             echo "version=$(uv run cz version)" >> "$GITHUB_OUTPUT"
           fi
-        continue-on-error: true
+
+      - name: Debug bump
+        run: |
+          git log --oneline -3
+          git tag --list
+          git status
 
       - name: Push version bump and tag
         if: steps.cz.outputs.bumped == 'true'
