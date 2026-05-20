@@ -10,11 +10,41 @@ extensions = [
 
 # -- Sphinx-Needs configuration --
 needs_types = [
-    {"directive": "req", "title": "Requirement", "prefix": "REQ_", "color": "#BFD8D2", "style": "node"},
-    {"directive": "spec", "title": "Specification", "prefix": "SPEC_", "color": "#DCB5FF", "style": "node"},
-    {"directive": "impl", "title": "Implementation", "prefix": "IMPL_", "color": "#FEDCD2", "style": "node"},
-    {"directive": "test", "title": "Test Case", "prefix": "TC_", "color": "#B9F6CA", "style": "node"},
-    {"directive": "arch", "title": "Architecture View", "prefix": "ARCH_", "color": "#E3F2FD", "style": "node"},
+    {
+        "directive": "req",
+        "title": "Requirement",
+        "prefix": "REQ_",
+        "color": "#BFD8D2",
+        "style": "node",
+    },
+    {
+        "directive": "spec",
+        "title": "Specification",
+        "prefix": "SPEC_",
+        "color": "#DCB5FF",
+        "style": "node",
+    },
+    {
+        "directive": "impl",
+        "title": "Implementation",
+        "prefix": "IMPL_",
+        "color": "#FEDCD2",
+        "style": "node",
+    },
+    {
+        "directive": "test",
+        "title": "Test Case",
+        "prefix": "TC_",
+        "color": "#B9F6CA",
+        "style": "node",
+    },
+    {
+        "directive": "arch",
+        "title": "Architecture View",
+        "prefix": "ARCH_",
+        "color": "#E3F2FD",
+        "style": "node",
+    },
 ]
 
 needs_links = {
