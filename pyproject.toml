@@ -43,6 +43,7 @@ dev = [
     "commitizen",
     "detect-secrets",
     "pre-commit",
+    "nox>=2025.2.9",
 ]
 
 [tool.hatch.build.targets.wheel]
