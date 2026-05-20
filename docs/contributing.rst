@@ -66,6 +66,27 @@ Before submitting a PR, run the full check suite:
 
 This runs ruff lint, ruff format check, mypy, and pytest in sequence.
 
+Pre-commit Hooks
+----------------
+
+Install pre-commit hooks to catch issues before committing:
+
+.. code-block:: bash
+
+   mise run pre-commit-install
+
+This installs hooks that run on every ``git commit``:
+
+- **ruff** — lint and format checks (auto-fixes lint issues)
+- **detect-secrets** — scans for accidentally committed secrets
+- **trailing-whitespace**, **end-of-file-fixer**, **check-yaml**
+
+Run manually on all files:
+
+.. code-block:: bash
+
+   mise run pre-commit
+
 Running Tests
 -------------
 
