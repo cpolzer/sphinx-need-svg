@@ -67,3 +67,11 @@ run = "uv run cz bump --dry-run"
 [tasks.bump-apply]
 description = "Bump version, update changelog, create tag"
 run = "uv run cz bump --yes --changelog"
+
+[tasks.pre-commit-install]
+description = "Install pre-commit hooks"
+run = "uv run pre-commit install"
+
+[tasks.pre-commit]
+description = "Run pre-commit hooks on all files"
+run = "uv run pre-commit run --all-files"

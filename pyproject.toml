@@ -41,6 +41,8 @@ dev = [
     "ruff",
     "mypy",
     "commitizen",
+    "detect-secrets",
+    "pre-commit",
 ]
 
 [tool.hatch.build.targets.wheel]

@@ -20,7 +20,6 @@ jobs:
         run: uv run pytest --cov=sphinx_need_svg --cov-report=xml
 
       - name: Upload results to Codecov
-        if: ${{ secrets.CODECOV_TOKEN != '' }}
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
