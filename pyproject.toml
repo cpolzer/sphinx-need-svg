@@ -13,9 +13,28 @@ dependencies = [
     "sphinx>=5.0",
     "sphinx-needs>=2.0",
 ]
+authors = [{ name = "christian polzer", email = "coders@hai-fai.de" }]
+classifiers = [
+  "Framework :: Sphinx",
+  "Framework :: Sphinx :: Extension",
+  "Development Status :: 4 - Beta",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Documentation",
+]
+keywords = ["sphinx", "sphinx-needs", "svg", "diagrams"]
+
+[project.urls]
+Homepage = "https://github.com/cpolzer/sphinx-need-svg"
+Repository = "https://github.com/cpolzer/sphinx-need-svg"
+Documentation = "https://sphinx-need-svg.readthedocs.io/en/latest/"
 
 [project.optional-dependencies]
-test = ["pytest", "pytest-regressions", "sphinx-need-svg[docs]"]
+test = ["pytest", "pytest-cov", "pytest-regressions", "sphinx-need-svg[docs]"]
 docs = ["sphinx", "sphinx-needs", "furo", "myst-parser"]
 dev = [
     "sphinx-need-svg[test,docs]",
