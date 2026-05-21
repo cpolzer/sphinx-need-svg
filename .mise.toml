@@ -22,11 +22,11 @@ run = "uv run pytest tests/test_docs_build.py -v"
 
 [tasks.docs]
 description = "Build HTML documentation"
-run = "uv run sphinx-build -b html docs docs/_build/html"
+run = "uv run sphinx-build -W -b html docs docs/_build/html"
 
 [tasks.docs-clean]
-description = "Clean and rebuild documentation"
-run = ["rm -rf docs/_build", "uv run sphinx-build -b html docs docs/_build/html"]
+description = "Clean and rebuild docs"
+run = ["rm -rf docs/_build", "uv run sphinx-build -W -b html docs docs/_build/html"]
 
 [tasks.build]
 description = "Build sdist and wheel"

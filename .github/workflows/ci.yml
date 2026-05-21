@@ -115,7 +115,7 @@ jobs:
         run: uv sync --all-extras
 
       - name: Build HTML docs
-        run: uv run sphinx-build -b html docs docs/_build/html
+        run: uv run sphinx-build -W -b html docs docs/_build/html
 
       - name: Upload docs preview artifact
         if: github.event_name == 'pull_request'
@@ -229,7 +229,7 @@ jobs:
         run: uv sync --all-extras
 
       - name: Build HTML docs
-        run: uv run sphinx-build -b html docs docs/_build/html
+        run: uv run sphinx-build -W -b html docs docs/_build/html
 
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v3
