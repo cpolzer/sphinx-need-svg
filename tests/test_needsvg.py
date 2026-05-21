@@ -20,6 +20,33 @@ def test_needsvg_jinja_ref(app, status, warning):
 
 
 @pytest.mark.sphinx("html", testroot="basic")
+def test_needsvg_ref_same_page_is_fragment_only(app, status, warning):
+    """A ``ref()`` call inside a needsvg rendered on the same page as
+    the target need must produce a pure fragment link (``#REQ_001``),
+    not a relative docname-prefixed link (``index.html#REQ_001``).
+
+    The browser resolves a relative link against the current page's
+    directory, so ``index.html#REQ_001`` rendered into ``index.html``
+    in a subdirectory page resolves to ``<subdir>/index.html#REQ_001``
+    and 404s. ``#REQ_001`` works regardless of the host page's URL.
+    """
+    app.build()
+    content = (Path(app.outdir) / "index.html").read_text()
+    assert 'href="#REQ_001"' in content
+    assert 'href="index.html#REQ_001"' not in content
+
+
+@pytest.mark.sphinx("html", testroot="basic")
+def test_needsvg_flow_same_page_is_fragment_only(app, status, warning):
+    """``flow()`` calls ``ref()`` internally, so it must inherit the
+    relative-URL fix and emit ``href="#REQ_001"`` for same-page needs."""
+    app.build()
+    content = (Path(app.outdir) / "index.html").read_text()
+    assert 'href="#REQ_001"' in content
+    assert 'href="index.html#REQ_001"' not in content
+
+
+@pytest.mark.sphinx("html", testroot="basic")
 def test_needsvg_filter(app, status, warning):
     app.build()
     content = (Path(app.outdir) / "index.html").read_text()
