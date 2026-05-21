@@ -18,7 +18,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
     app.connect("doctree-resolved", process_needsvg)
 
     return {
-        "version": "0.3.0",
+        "version": "0.3.1",
         "parallel_read_safe": True,
         "parallel_write_safe": True,
     }

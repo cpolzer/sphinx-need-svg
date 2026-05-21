@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "sphinx-need-svg"
-version = "0.3.0"
+version = "0.3.1"
 description = "Sphinx-Needs extension for SVG diagrams with clickable need links"
 requires-python = ">=3.9"
 license = {file = "LICENSE"}
@@ -77,7 +77,7 @@ testpaths = ["tests"]
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "0.3.0"
+version = "0.3.1"
 version_files = [
     "pyproject.toml:^version",
     "src/sphinx_need_svg/__init__.py:version",
