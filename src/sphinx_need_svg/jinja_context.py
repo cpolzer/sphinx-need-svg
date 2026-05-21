@@ -8,8 +8,9 @@ from jinja2 import Environment
 class SvgJinjaContext:
     """Provides Jinja2 context for needsvg templates."""
 
-    def __init__(self, app: Any) -> None:
+    def __init__(self, app: Any, fromdocname: str | None = None) -> None:
         self._app = app
+        self._fromdocname = fromdocname
         self._needs = self._load_needs()
 
     def _load_needs(self) -> dict[str, Any]:
@@ -27,12 +28,33 @@ class SvgJinjaContext:
         return self._needs
 
     def ref(self, need_id: str) -> str:
-        """Return the URL anchor for a need."""
+        """Return the URL anchor for a need, relative to the rendering page.
+
+        When ``fromdocname`` is known (the docname of the page into which
+        the needsvg is being rendered), the URL is computed via
+        ``builder.get_relative_uri`` so it is correct regardless of where
+        the source page and the target need's page live in the doctree:
+
+        * Same page: returns ``#NEED-ID`` (pure fragment anchor).
+        * Sibling page: returns ``sibling.html#NEED-ID``.
+        * Cross-directory: returns ``../path/to/page.html#NEED-ID``.
+
+        Without ``fromdocname`` (e.g. when called outside of the directive
+        pipeline), falls back to the unscoped ``{docname}.html#{id}`` form.
+        """
         need = self._needs.get(need_id)
         if need is None:
             return f"#UNKNOWN-{need_id}"
-        docname = need.get("docname", "")
-        return f"{docname}.html#{need_id}"
+        target_docname = need.get("docname", "")
+        if not target_docname:
+            return f"#{need_id}"
+        if self._fromdocname is None:
+            return f"{target_docname}.html#{need_id}"
+        try:
+            base = self._app.builder.get_relative_uri(self._fromdocname, target_docname)
+        except Exception:
+            base = f"{target_docname}.html"
+        return f"{base}#{need_id}"
 
     def filter(self, filter_string: str) -> list[Any]:
         """Return needs matching a filter expression."""
@@ -76,13 +98,21 @@ class SvgJinjaContext:
         }
 
 
-def render_jinja_svg(content: str, app: Any) -> tuple[str, dict[str, Any]]:
+def render_jinja_svg(
+    content: str, app: Any, fromdocname: str | None = None
+) -> tuple[str, dict[str, Any]]:
     """Render a Jinja2 template string with needs-aware context.
+
+    Pass ``fromdocname`` (the rendering page's docname) so that
+    :py:meth:`SvgJinjaContext.ref` and :py:meth:`SvgJinjaContext.flow`
+    emit URLs relative to that page. Without it, links fall back to the
+    legacy ``{docname}.html#{id}`` form which doubles the path for
+    same-page references.
 
     Returns the rendered SVG string and the Jinja context dict (for reuse
     by downstream processors such as the drawio content-attribute sync).
     """
-    ctx = SvgJinjaContext(app)
+    ctx = SvgJinjaContext(app, fromdocname=fromdocname)
     env = Environment()
     template = env.from_string(content)
     context = ctx.get_context()

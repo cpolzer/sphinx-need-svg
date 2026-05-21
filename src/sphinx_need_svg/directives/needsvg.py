@@ -103,7 +103,9 @@ def process_needsvg(app: Sphinx, doctree: nodes.document, docname: str) -> None:
             continue
 
         try:
-            svg_content, jinja_ctx = render_jinja_svg(data["content"], app)
+            svg_content, jinja_ctx = render_jinja_svg(
+                data["content"], app, fromdocname=docname
+            )
             svg_content = sync_drawio_content(svg_content, jinja_ctx)
         except Exception as e:
             logger.warning(f"needsvg error at {data['docname']}:{data['lineno']}: {e}")
